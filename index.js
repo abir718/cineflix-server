@@ -34,7 +34,13 @@ async function run() {
     app.post('/addmovies' , async(req , res)=>{
         const newMovie = req.body;
         console.log(newMovie);
-        const result = await coffee.insertOne(newMovie);
+        const result = await addmovies.insertOne(newMovie);
+        res.send(result);
+    })
+
+    app.get('/addmovies' , async(req , res)=>{
+        const cursor = addmovies.find();
+        const result = await cursor.toArray();
         res.send(result);
     })
 
