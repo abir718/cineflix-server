@@ -30,6 +30,7 @@ async function run() {
 
     const database = client.db("CineflixDB");
     const addmovies = database.collection("addmovies");
+    const favmovies = database.collection("favmovies");
 
     app.post('/addmovies' , async(req , res)=>{
         const newMovie = req.body;
@@ -50,6 +51,14 @@ async function run() {
         const result = await addmovies.findOne(query);
         res.send(result)
       })
+
+      app.post('/favmovies' , async(req , res)=>{
+        const favMovie = req.body;
+        console.log(favMovie);
+        const result = await favmovies.insertOne(favMovie);
+        res.send(result);
+    })
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
