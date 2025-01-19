@@ -32,9 +32,6 @@ async function run() {
     const favmovies = database.collection("favmovies");
     const featuredmovies = database.collection("featuredmovies");
 
-
-
-
     app.get('/featuredmovies', async (req, res) => {
       const cursor = featuredmovies.find().sort({ rating: -1 }); 
       const result = await cursor.toArray();
@@ -47,8 +44,6 @@ async function run() {
       const result = await featuredmovies.findOne(query);
       res.send(result)
     })
-
-
 
     app.post('/addmovies' , async(req , res)=>{
         const newMovie = req.body;
@@ -69,7 +64,6 @@ async function run() {
         const result = await addmovies.findOne(query);
         res.send(result)
       })
-
 
       app.delete('/addmovies/:id', async (req, res) => {
         const id = req.params.id;
@@ -96,12 +90,33 @@ async function run() {
         res.send(result);
     })
 
-
     app.delete('/favmovies/:id' , async (req , res)=>{
         const id = req.params.id;
         const query = {_id: id}
         const result = await favmovies.deleteOne(query);
         res.send(result)
+      })
+
+      app.get('/update/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await addmovies.findOne(query);
+        res.send(result);
+      });
+      
+
+      app.put('/update/:id' , async(req , res)=>{
+        const id = req.params.id;
+        const filter = {_id: new ObjectId(id)}
+        const options = {upsert: true};
+        const updatedMovie = req.body
+        const updateDoc  = {
+          $set: {
+            poster:updatedMovie.poster , title:updatedMovie.title , genre:updatedMovie.genre , duration:updatedMovie.duration , releaseYear:updatedMovie.releaseYear , rating:updatedMovie.rating , summary:updatedMovie.summary
+          }
+        }
+        const result = await addmovies.updateOne(filter , updateDoc  , options)
+        res.send(result);
       })
 
 
