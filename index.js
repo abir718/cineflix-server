@@ -30,6 +30,25 @@ async function run() {
     const database = client.db("CineflixDB");
     const addmovies = database.collection("addmovies");
     const favmovies = database.collection("favmovies");
+    const featuredmovies = database.collection("featuredmovies");
+
+
+
+
+    app.get('/featuredmovies', async (req, res) => {
+      const cursor = featuredmovies.find().sort({ rating: -1 }); 
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get('/featuredmovies/:id' , async (req , res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await featuredmovies.findOne(query);
+      res.send(result)
+    })
+
+
 
     app.post('/addmovies' , async(req , res)=>{
         const newMovie = req.body;
