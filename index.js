@@ -52,7 +52,13 @@ async function run() {
       })
 
 
-      
+      app.delete('/addmovies/:id', async (req, res) => {
+        const id = req.params.id;
+        console.log(`Deleting movie with ID: ${id}`); 
+          const query = { _id: new ObjectId(id) }; 
+          const result = await addmovies.deleteOne(query);
+          res.send(result);
+      });
 
       app.post('/favmovies' , async(req , res)=>{
         const favMovie = req.body;
