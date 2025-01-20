@@ -76,7 +76,8 @@ async function run() {
       app.post('/favmovies' , async(req , res)=>{
         const favMovie = req.body;
         console.log(favMovie);
-        const existingMovie = await favmovies.findOne({ email: favMovie.email, title: favMovie.title });
+        delete favMovie._id;
+        const existingMovie = await favmovies.findOne({ email: favMovie.email , title: favMovie.title,});
         if (existingMovie) {
             return res.status(400).json({ message: "Movie already in favorites" });
         }
@@ -92,7 +93,7 @@ async function run() {
 
     app.delete('/favmovies/:id' , async (req , res)=>{
         const id = req.params.id;
-        const query = {_id: id}
+        const query = {_id: new ObjectId (id)}
         const result = await favmovies.deleteOne(query);
         res.send(result)
       })
