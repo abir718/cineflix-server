@@ -19,14 +19,24 @@ const client = new MongoClient(uri, {
   }
 });
 
-async function run() {
+async function run() {  
   try {
 
     const database = client.db("CineDB")
-    const addMovies = database.collection("addMovies")
+    const addWatchlist = database.collection("addWatchlist")
 
+    app.post('/watchlist', async (req, res) => {
+      const newWatchlist = req.body;
+      console.log(newWatchlist);
+      const result = await addWatchlist.insertOne(newWatchlist);
+      res.send(result);
+    })
 
-
+    app.get('/watchlist', async (req, res) => {
+      const cursor = addWatchlist.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
 
 
     // Connect the client to the server	(optional starting in v4.7)
@@ -48,4 +58,4 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
   console.log(`server is running on port ${port}`)
-})
+}) 
